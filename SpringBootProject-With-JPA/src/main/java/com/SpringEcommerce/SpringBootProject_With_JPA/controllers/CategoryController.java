@@ -2,6 +2,7 @@ package com.SpringEcommerce.SpringBootProject_With_JPA.controllers;
 
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.services.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class CategoryController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<String> addCategory(@RequestBody Category category)
+    public ResponseEntity<String> addCategory(@Valid @RequestBody Category category)
     {
         categoryService.addCategory(category);
         return ResponseEntity.ok("Successfully added the category");
