@@ -14,7 +14,14 @@ import java.util.Optional;
 @Data
 public class CategoryService implements CartegoryServiceInterface{
 
+
+
+
     DBRepository dbRepository;
+
+    public CategoryService(DBRepository dbRepository) {
+        this.dbRepository = dbRepository;
+    }
 
     @Override
     public List<Category> getCategories() {
@@ -43,19 +50,17 @@ public class CategoryService implements CartegoryServiceInterface{
     }
 
     @Override
-    public String updateCategory(Category category, Long id) {
-        Optional<Category> categoryId = dbRepository.findById(id);
+    public Category updateCategory(Category category, Long id) {
 
-        if(categoryId.isPresent())
-        {
-            Category existingCategory = categoryId.get();
-            existingCategory.setCategoryName(category.getCategoryName());
-            dbRepository.save(existingCategory);
-            return "Category successfully updated";
-        }
-        else
-        {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Id not found.");
-        }
+        List<Category> cat = dbRepository.findAll();
+
+        Category existingCategory = cat.stream()
+                .filter(c -> c.getCategoryId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Category with ID " + id + " not found"));
+
+        existingCategory.setCategoryName(category.getCategoryName());
+
+        return dbRepository.save(existingCategory);
     }
 }

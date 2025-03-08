@@ -8,5 +8,5 @@ public interface CartegoryServiceInterface {
     List<Category> getCategories();
     void addCategory(Category category);
     String removeCategory(Long id);
-    String updateCategory(Category category, Long id);
+    Category updateCategory(Category category, Long id);
 }

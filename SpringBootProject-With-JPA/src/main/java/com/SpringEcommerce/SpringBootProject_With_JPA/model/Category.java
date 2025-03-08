@@ -8,10 +8,14 @@ import lombok.*;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
+
+    private String categoryName;
+
 
     public String getCategoryName() {
         return categoryName;
@@ -29,6 +33,5 @@ public class Category {
         this.categoryId = categoryId;
     }
 
-    private String categoryName;
 
 }
