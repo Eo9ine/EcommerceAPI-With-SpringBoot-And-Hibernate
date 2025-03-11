@@ -1,5 +1,6 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.services;
 
+import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.CustomResourceNotFoundException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
 import lombok.Data;
@@ -45,7 +46,7 @@ public class CategoryService implements CartegoryServiceInterface{
         }
         else
         {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ID not found.");
+            throw new CustomResourceNotFoundException("Category", "category", id);
         }
     }
 
@@ -57,10 +58,12 @@ public class CategoryService implements CartegoryServiceInterface{
         Category existingCategory = cat.stream()
                 .filter(c -> c.getCategoryId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Category with ID " + id + " not found"));
+                .orElseThrow(() -> new CustomResourceNotFoundException("Category","category",id));
 
         existingCategory.setCategoryName(category.getCategoryName());
 
         return dbRepository.save(existingCategory);
     }
+
+
 }

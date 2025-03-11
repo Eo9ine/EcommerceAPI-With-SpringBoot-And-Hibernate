@@ -7,6 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,4 +30,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<Map<String,String>>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CustomResourceNotFoundException.class)
+    public ResponseEntity<String> ResourceNotFound(CustomResourceNotFoundException e)
+    {
+        String message = e.getMessage();
+        return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(APIException.class)
+    public  ResponseEntity<String> customAPIException(APIException e)
+    {
+        String message = e.getMessage();
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
 }
+    
