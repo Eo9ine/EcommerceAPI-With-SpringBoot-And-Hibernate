@@ -1,5 +1,6 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.services;
 
+import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.APIException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.CustomResourceNotFoundException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
@@ -16,8 +17,6 @@ import java.util.Optional;
 public class CategoryService implements CartegoryServiceInterface{
 
 
-
-
     DBRepository dbRepository;
 
     public CategoryService(DBRepository dbRepository) {
@@ -25,12 +24,21 @@ public class CategoryService implements CartegoryServiceInterface{
     }
 
     @Override
-    public List<Category> getCategories() {
-        return dbRepository.findAll();
+    public List<Category> getCategories()
+    {
+        List<Category> categories = dbRepository.findAll();
+        if(categories.isEmpty())
+            throw new APIException("No category have been created !");
+        return categories;
     }
 
     @Override
-    public void addCategory(Category category) {
+    public void addCategory(Category category)
+    {
+        Category savedCategory = dbRepository.findByCategoryName(category.getCategoryName());
+        if(savedCategory != null)
+            throw new APIException("Category " + category.getCategoryName() + " already exists !!!");
+
         dbRepository.save(category);
     }
 
@@ -54,6 +62,12 @@ public class CategoryService implements CartegoryServiceInterface{
     public Category updateCategory(Category category, Long id) {
 
         List<Category> cat = dbRepository.findAll();
+
+        Category category1 = dbRepository.findByCategoryName(category.getCategoryName());
+
+        if(category1 != null)
+            throw new APIException("Category " + category.getCategoryName() + " already exists !!!");
+
 
         Category existingCategory = cat.stream()
                 .filter(c -> c.getCategoryId().equals(id))
