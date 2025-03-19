@@ -1,6 +1,7 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.controllers;
 
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.services.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class CategoryController {
 
 
     @GetMapping("/categories")
-    public ResponseEntity<List<Category>> getCategories()
+    public ResponseEntity<CategoryResponse> getCategories()
     {
         return ResponseEntity.ok(categoryService.getCategories());
     }

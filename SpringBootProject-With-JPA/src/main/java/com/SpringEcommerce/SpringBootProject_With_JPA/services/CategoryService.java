@@ -3,8 +3,12 @@ package com.SpringEcommerce.SpringBootProject_With_JPA.services;
 import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.APIException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.CustomResourceNotFoundException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryDTO;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,19 +21,29 @@ import java.util.Optional;
 public class CategoryService implements CartegoryServiceInterface{
 
 
-    DBRepository dbRepository;
+    private DBRepository dbRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public CategoryService(DBRepository dbRepository) {
         this.dbRepository = dbRepository;
     }
 
     @Override
-    public List<Category> getCategories()
+    public CategoryResponse getCategories()
     {
         List<Category> categories = dbRepository.findAll();
         if(categories.isEmpty())
             throw new APIException("No category have been created !");
-        return categories;
+
+        List<CategoryDTO> categoryDTOS = categories.stream()
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .toList();
+
+        CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setContent(categoryDTOS);
+        return categoryResponse;
     }
 
     @Override
