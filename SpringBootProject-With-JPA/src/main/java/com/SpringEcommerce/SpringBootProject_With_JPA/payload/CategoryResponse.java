@@ -6,9 +6,17 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryResponse {
     List<CategoryDTO> content;
+
+    public List<CategoryDTO> getContent() {
+        return content;
+    }
+
+    public void setContent(List<CategoryDTO> content) {
+        this.content = content;
+    }
 }

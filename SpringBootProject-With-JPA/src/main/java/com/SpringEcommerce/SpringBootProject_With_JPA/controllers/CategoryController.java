@@ -1,6 +1,7 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.controllers;
 
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryDTO;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.services.CategoryService;
 import jakarta.validation.Valid;
@@ -26,23 +27,23 @@ public class CategoryController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<String> addCategory(@Valid @RequestBody Category category)
+    public ResponseEntity<CategoryDTO> addCategory(@Valid @RequestBody CategoryDTO categoryDTO)
     {
-        categoryService.addCategory(category);
-        return ResponseEntity.ok("Successfully added the category");
+        CategoryDTO results = categoryService.addCategory(categoryDTO);
+        return ResponseEntity.ok(results);
     }
 
     @PutMapping("/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId,@RequestBody Category category)
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long categoryId,@RequestBody CategoryDTO categoryDTO)
     {
 
-            categoryService.updateCategory(category, categoryId);
-            return ResponseEntity.ok("id: " + categoryId + " is successfully updated");
+            CategoryDTO savedCategoryDTO = categoryService.updateCategory(categoryDTO, categoryId);
+            return ResponseEntity.ok(savedCategoryDTO);
 
     }
 
     @DeleteMapping("/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId)
+    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId)
     {
 
             categoryService.removeCategory(categoryId);

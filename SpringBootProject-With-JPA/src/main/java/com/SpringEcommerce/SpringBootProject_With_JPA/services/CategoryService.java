@@ -47,24 +47,27 @@ public class CategoryService implements CartegoryServiceInterface{
     }
 
     @Override
-    public void addCategory(Category category)
+    public CategoryDTO addCategory(CategoryDTO categoryDTO)
     {
-        Category savedCategory = dbRepository.findByCategoryName(category.getCategoryName());
-        if(savedCategory != null)
+        Category category = modelMapper.map(categoryDTO,Category.class);
+        Category existingCategory = dbRepository.findByCategoryName(category.getCategoryName());
+        if(existingCategory != null)
             throw new APIException("Category " + category.getCategoryName() + " already exists !!!");
 
-        dbRepository.save(category);
+        Category savedCategory = dbRepository.save(category);
+        return modelMapper.map(savedCategory,CategoryDTO.class);
+
     }
 
     @Override
-    public String removeCategory(Long id) {
+    public CategoryDTO removeCategory(Long id) {
         Optional<Category> catId = dbRepository.findById(id);
 
         if(catId.isPresent())
         {
             Category existingCategory = catId.get();
             dbRepository.delete(existingCategory);
-            return "Successfully deleted Category";
+            return modelMapper.map(existingCategory,CategoryDTO.class);
         }
         else
         {
@@ -73,24 +76,25 @@ public class CategoryService implements CartegoryServiceInterface{
     }
 
     @Override
-    public Category updateCategory(Category category, Long id) {
+    public CategoryDTO updateCategory(CategoryDTO categoryDTO, Long id) {
 
+        Category category = modelMapper.map(categoryDTO,Category.class);
         List<Category> cat = dbRepository.findAll();
-
-        Category category1 = dbRepository.findByCategoryName(category.getCategoryName());
-
-        if(category1 != null)
-            throw new APIException("Category " + category.getCategoryName() + " already exists !!!");
-
 
         Category existingCategory = cat.stream()
                 .filter(c -> c.getCategoryId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new CustomResourceNotFoundException("Category","category",id));
 
-        existingCategory.setCategoryName(category.getCategoryName());
+        Category categoryName = dbRepository.findByCategoryName(category.getCategoryName());
 
-        return dbRepository.save(existingCategory);
+        if(categoryName != null)
+            throw new APIException("Category " + category.getCategoryName() + " already exists !!!");
+
+        existingCategory.setCategoryName(category.getCategoryName());
+        Category savedCategoryName = dbRepository.save(existingCategory);
+        return modelMapper.map(savedCategoryName, CategoryDTO.class);
+
     }
 
 
