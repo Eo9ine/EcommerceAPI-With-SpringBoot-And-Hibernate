@@ -1,5 +1,6 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.controllers;
 
+import com.SpringEcommerce.SpringBootProject_With_JPA.config.AppConstant;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryDTO;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryResponse;
@@ -22,8 +23,8 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public ResponseEntity<CategoryResponse> getCategories(
-            @RequestParam(name = "pageNumber") Integer pageNumber,
-            @RequestParam(name = "pageSize") Integer pageSize
+            @RequestParam(name = "pageNumber", defaultValue = AppConstant.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstant.PAGE_SIZE, required = false) Integer pageSize
                                                           )
     {
         return ResponseEntity.ok(categoryService.getCategories(pageNumber,pageSize));

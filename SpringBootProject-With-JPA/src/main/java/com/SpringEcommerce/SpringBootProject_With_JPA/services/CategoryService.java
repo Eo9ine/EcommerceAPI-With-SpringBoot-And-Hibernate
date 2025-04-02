@@ -50,6 +50,10 @@ public class CategoryService implements CartegoryServiceInterface{
 
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setContent(categoryDTOS);
+        categoryResponse.setPageNumber(contentPage.getNumber());
+        categoryResponse.setPageSize(contentPage.getSize());
+        categoryResponse.setTotalElements(contentPage.getNumberOfElements());
+        categoryResponse.setLastPage(contentPage.isLast());
         return categoryResponse;
     }
 
