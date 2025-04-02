@@ -21,9 +21,12 @@ public class CategoryController {
 
 
     @GetMapping("/categories")
-    public ResponseEntity<CategoryResponse> getCategories()
+    public ResponseEntity<CategoryResponse> getCategories(
+            @RequestParam(name = "pageNumber") Integer pageNumber,
+            @RequestParam(name = "pageSize") Integer pageSize
+                                                          )
     {
-        return ResponseEntity.ok(categoryService.getCategories());
+        return ResponseEntity.ok(categoryService.getCategories(pageNumber,pageSize));
     }
 
     @PostMapping("/categories")

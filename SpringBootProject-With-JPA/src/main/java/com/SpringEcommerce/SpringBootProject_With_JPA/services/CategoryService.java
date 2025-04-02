@@ -9,6 +9,9 @@ import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,9 +34,13 @@ public class CategoryService implements CartegoryServiceInterface{
     }
 
     @Override
-    public CategoryResponse getCategories()
+    public CategoryResponse getCategories(Integer pageNumber, Integer pageSize)
     {
-        List<Category> categories = dbRepository.findAll();
+
+        Pageable contentPageDetails = PageRequest.of(pageNumber, pageSize);
+        Page<Category> contentPage = dbRepository.findAll(contentPageDetails);
+
+        List<Category> categories = contentPage.getContent();
         if(categories.isEmpty())
             throw new APIException("No category have been created !");
 
