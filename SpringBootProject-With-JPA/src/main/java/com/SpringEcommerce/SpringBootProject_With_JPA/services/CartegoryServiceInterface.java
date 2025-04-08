@@ -7,7 +7,7 @@ import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryResponse;
 import java.util.List;
 
 public interface CartegoryServiceInterface {
-    CategoryResponse getCategories(Integer pageNumber, Integer pageSize);
+    CategoryResponse getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
     CategoryDTO addCategory(CategoryDTO categoryDTO);
     CategoryDTO removeCategory(Long id);
     CategoryDTO updateCategory(CategoryDTO categoryDTO, Long id);
