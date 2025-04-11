@@ -10,8 +10,10 @@ public class Product {
     private Long productId;
     private String productName;
     private String description;
+    private String productImage;
     private Integer quantity;
     private double price;
+    private double discount;
     private double specialPrice;
 
     @ManyToOne
@@ -26,16 +28,35 @@ public class Product {
         this.category = category;
     }
 
-    public Product(Long productId, String productName, String description, Integer quantity, double price, double specialPrice) {
+    public Product(Long productId, String productName, String description
+                   ,String productImage, Integer quantity, double price, double discount, double specialPrice) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;
+        this.productImage = productImage;
         this.quantity = quantity;
         this.price = price;
+        this.discount = discount;
         this.specialPrice = specialPrice;
     }
 
     public Product() {
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 
     public Long getProductId() {
