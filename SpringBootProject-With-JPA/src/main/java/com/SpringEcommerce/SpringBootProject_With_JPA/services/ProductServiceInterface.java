@@ -10,4 +10,7 @@ public interface ProductServiceInterface {
     ProductDTO addProduct(Long categoryId, Product product);
 
     ProductResponse getAllProducts();
+
+
+    ProductDTO deleteProduct(Long productId);
 }

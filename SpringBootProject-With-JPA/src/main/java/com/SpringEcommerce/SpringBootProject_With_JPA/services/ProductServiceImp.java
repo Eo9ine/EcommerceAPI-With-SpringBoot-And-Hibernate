@@ -55,4 +55,16 @@ public class ProductServiceImp implements ProductServiceInterface{
         return productResponse;
     }
 
+    @Override
+    public ProductDTO deleteProduct(Long productId) {
+        Product product = productDBRepository.findById(productId)
+                .orElseThrow(() -> new CustomResourceNotFoundException("Product", "productId", productId));
+
+        productDBRepository.delete(product);
+
+        ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+        return productDTO;
+
+    }
+
 }
