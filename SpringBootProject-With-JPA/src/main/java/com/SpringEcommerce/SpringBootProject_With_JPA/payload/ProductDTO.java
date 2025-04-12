@@ -11,7 +11,8 @@ public class ProductDTO {
     private double discount;
     private double specialPrice;
 
-    public ProductDTO(Long productId, String productName, String description, String image, Integer quantity, double price, double discount,double specialPrice) {
+    public ProductDTO(Long productId, String productName, String description, String image, Integer quantity,
+                      double price, double discount,double specialPrice) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;

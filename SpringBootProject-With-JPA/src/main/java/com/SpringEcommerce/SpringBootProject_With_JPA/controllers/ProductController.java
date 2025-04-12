@@ -3,6 +3,7 @@ package com.SpringEcommerce.SpringBootProject_With_JPA.controllers;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Product;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryDTO;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductDTO;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.services.CategoryService;
 import com.SpringEcommerce.SpringBootProject_With_JPA.services.ProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,13 @@ public class ProductController {
     {
         ProductDTO productDTO = productServiceImp.addProduct(categoryId,product);
         return new ResponseEntity<>(productDTO, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/public/product")
+    public ResponseEntity<ProductResponse> getAllProducts()
+    {
+        ProductResponse products = productServiceImp.getAllProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
 }

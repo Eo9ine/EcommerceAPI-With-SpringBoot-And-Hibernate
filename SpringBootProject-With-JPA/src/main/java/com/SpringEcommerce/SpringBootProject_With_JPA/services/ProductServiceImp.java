@@ -5,6 +5,7 @@ import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Product;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryDTO;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductDTO;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.ProductDBRepository;
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProductServiceImp implements ProductServiceInterface{
@@ -37,4 +40,19 @@ public class ProductServiceImp implements ProductServiceInterface{
         return modelMapper.map(saveProduct, ProductDTO.class);
 
     }
+
+    @Override
+    public ProductResponse getAllProducts() {
+
+        List<Product> fetchingProducts = productDBRepository.findAll();
+
+        List<ProductDTO> productDTOS = fetchingProducts.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOS);
+        return productResponse;
+    }
+
 }
