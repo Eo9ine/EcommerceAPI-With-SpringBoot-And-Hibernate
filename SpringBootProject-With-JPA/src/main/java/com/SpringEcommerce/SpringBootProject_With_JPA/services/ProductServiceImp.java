@@ -84,5 +84,16 @@ public class ProductServiceImp implements ProductServiceInterface{
 
     }
 
+    @Override
+    public ProductResponse getProductByKeyword(String keyword) {
+        List<Product> products = productDBRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%");
+
+        List<ProductDTO> productDTOS = products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+
+        return new ProductResponse(productDTOS);
+    }
+
 
 }
