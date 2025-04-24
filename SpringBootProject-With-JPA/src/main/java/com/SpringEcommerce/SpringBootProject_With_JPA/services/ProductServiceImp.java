@@ -95,5 +95,27 @@ public class ProductServiceImp implements ProductServiceInterface{
         return new ProductResponse(productDTOS);
     }
 
+    @Override
+    public ProductDTO updateProduct(Long productId, ProductDTO productDTO) {
+        Product product = modelMapper.map(productDTO, Product.class);
+
+        Product productInDb =  productDBRepository.findById(productId)
+                .orElseThrow(() -> new CustomResourceNotFoundException("Product", "productId", productId));
+
+        productInDb.setProductName(product.getProductName());
+        productInDb.setDiscount(product.getDiscount());
+        productInDb.setDescription(product.getDescription());
+        productInDb.setQuantity(product.getQuantity());
+        productInDb.setPrice(product.getPrice());
+
+        double specialPrice = product.getPrice() - (product.getDiscount() * 0.01) * product.getPrice();
+        productInDb.setSpecialPrice(specialPrice);
+
+        Product savedProduct = productDBRepository.save(productInDb);
+
+        return modelMapper.map(savedProduct,ProductDTO.class);
+
+    }
+
 
 }
