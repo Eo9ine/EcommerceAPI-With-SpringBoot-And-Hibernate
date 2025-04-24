@@ -4,10 +4,13 @@ import com.SpringEcommerce.SpringBootProject_With_JPA.model.Product;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductDTO;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 public interface ProductServiceInterface {
-    ProductDTO addProduct(Long categoryId, Product product);
+    ProductDTO addProduct(Long categoryId, ProductDTO product);
 
     ProductResponse getAllProducts();
 
@@ -19,4 +22,6 @@ public interface ProductServiceInterface {
     ProductResponse getProductByKeyword(String keyword);
 
     ProductDTO updateProduct(Long productId, ProductDTO productDTO);
+
+    ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
 }
