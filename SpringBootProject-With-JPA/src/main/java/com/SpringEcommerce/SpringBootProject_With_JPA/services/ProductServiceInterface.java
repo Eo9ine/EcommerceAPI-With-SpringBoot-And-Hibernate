@@ -13,4 +13,6 @@ public interface ProductServiceInterface {
 
 
     ProductDTO deleteProduct(Long productId);
+
+    ProductResponse getProductByCategory(Long categoryId);
 }

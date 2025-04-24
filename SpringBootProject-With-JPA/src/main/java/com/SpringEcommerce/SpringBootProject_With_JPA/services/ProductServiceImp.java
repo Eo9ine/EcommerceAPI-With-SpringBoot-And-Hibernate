@@ -67,4 +67,22 @@ public class ProductServiceImp implements ProductServiceInterface{
 
     }
 
+    @Override
+    public ProductResponse getProductByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CustomResourceNotFoundException("Category", "categoryId", categoryId));
+
+        List<Product> products = productDBRepository.findByCategoryOrderByPriceAsc(category);
+
+        List<ProductDTO> productDTOS = products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .toList();
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOS);
+        return productResponse;
+
+    }
+
+
 }
