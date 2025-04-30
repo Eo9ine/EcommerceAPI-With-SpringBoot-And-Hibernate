@@ -126,6 +126,11 @@ public class ProductServiceImp implements ProductServiceInterface{
         Product productInDb =  productDBRepository.findById(productId)
                 .orElseThrow(() -> new CustomResourceNotFoundException("Product", "productId", productId));
 
+        Product existingProduct = productDBRepository.findByProductName(product.getProductName());
+
+        if (existingProduct != null)
+            throw new APIException("Product already exists");
+
         productInDb.setProductName(product.getProductName());
         productInDb.setDiscount(product.getDiscount());
         productInDb.setDescription(product.getDescription());
