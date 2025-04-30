@@ -10,7 +10,7 @@ public class Product {
     private Long productId;
     private String productName;
     private String description;
-    private String productImage;
+    private String image;
     private Integer quantity;
     private double price;
     private double discount;
@@ -29,11 +29,11 @@ public class Product {
     }
 
     public Product(Long productId, String productName, String description
-                   ,String productImage, Integer quantity, double price, double discount, double specialPrice) {
+                   , String image, Integer quantity, double price, double discount, double specialPrice) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;
-        this.productImage = productImage;
+        this.image = image;
         this.quantity = quantity;
         this.price = price;
         this.discount = discount;
@@ -43,12 +43,12 @@ public class Product {
     public Product() {
     }
 
-    public String getProductImage() {
-        return productImage;
+    public String getImage() {
+        return image;
     }
 
-    public void setProductImage(String productImage) {
-        this.productImage = productImage;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public double getDiscount() {
