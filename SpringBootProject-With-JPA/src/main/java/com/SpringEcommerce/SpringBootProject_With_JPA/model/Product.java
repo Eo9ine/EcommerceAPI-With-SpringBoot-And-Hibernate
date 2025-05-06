@@ -1,6 +1,8 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Product {
@@ -8,7 +10,12 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
+
+    @NotBlank
+    @Size(min = 3,message = "Name must consist at least 3 letters")
     private String productName;
+
+    @NotBlank
     private String description;
     private String image;
     private Integer quantity;

@@ -11,6 +11,10 @@ import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.ProductDBRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,13 +60,22 @@ public class ProductServiceImp implements ProductServiceInterface{
     }
 
     @Override
-    public ProductResponse getAllProducts() {
+    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
-        List<Product> fetchingProducts = productDBRepository.findAll();
+        Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable contentPageDetails = PageRequest.of(pageNumber,pageSize, sortByAndOrder);
+        Page<Product> contentPage = productDBRepository.findAll(contentPageDetails);
+
+        List<Product> fetchingProducts = contentPage.getContent();
+
+
 
         if (fetchingProducts.isEmpty())
         {
-            throw new APIException("No products found.");
+            throw new APIException("Products not found!");
         }
 
         List<ProductDTO> productDTOS = fetchingProducts.stream()
@@ -71,6 +84,10 @@ public class ProductServiceImp implements ProductServiceInterface{
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
+        productResponse.setPageNumber(contentPage.getTotalPages());
+        productResponse.setPageSize(contentPage.getSize());
+        productResponse.setTotalElements(contentPage.getNumberOfElements());
+        productResponse.setLastPage(contentPage.isLast());
         return productResponse;
     }
 
@@ -94,6 +111,9 @@ public class ProductServiceImp implements ProductServiceInterface{
 
         List<Product> products = productDBRepository.findByCategoryOrderByPriceAsc(category);
 
+        if( products.isEmpty())
+            throw new APIException("Product not found!");
+
         List<ProductDTO> productDTOS = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
@@ -109,14 +129,17 @@ public class ProductServiceImp implements ProductServiceInterface{
         List<Product> products = productDBRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%");
 
         if(products.isEmpty())
-            throw new CustomResourceNotFoundException("Product", "productName", keyword);
+            throw new APIException("Product not found!");
 
 
         List<ProductDTO> productDTOS = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
-        return new ProductResponse(productDTOS);
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOS);
+
+        return productResponse;
     }
 
     @Override

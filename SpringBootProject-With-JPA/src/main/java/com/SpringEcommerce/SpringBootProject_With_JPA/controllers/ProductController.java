@@ -29,9 +29,14 @@ public class ProductController {
     }
 
     @GetMapping("/public/products")
-    public ResponseEntity<ProductResponse> getAllProducts()
+    public ResponseEntity<ProductResponse> getAllProducts(
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
+            @RequestParam String sortBy,
+            @RequestParam String sortOrder
+    )
     {
-        ProductResponse products = productServiceImp.getAllProducts();
+        ProductResponse products = productServiceImp.getAllProducts(pageNumber,pageSize,sortBy,sortOrder);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
