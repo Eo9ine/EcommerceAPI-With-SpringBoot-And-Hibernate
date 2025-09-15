@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -33,7 +36,11 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany
+    @ManyToMany(cascade =
+            {CascadeType.PERSIST,
+            CascadeType.DETACH,
+            CascadeType.MERGE},
+            fetch = FetchType.EAGER)
     @JoinColumn(name = "user_role")
-    private Role userRole;
+    private Set<Role> userRoles = new HashSet<>();
 }
