@@ -1,12 +1,11 @@
 
 package com.SpringEcommerce.SpringBootProject_With_JPA.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.List;
 
 @Entity(name = "categories")
 @NoArgsConstructor
@@ -20,6 +19,17 @@ public class Category {
     @Size(min = 3, message = "Category name must be at least 3 charaters.")
     private String categoryName;
 
+
+    @OneToMany
+    public List<Product> products;
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 
     public String getCategoryName() {
         return categoryName;
@@ -36,6 +46,8 @@ public class Category {
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
+
+
 
 
 }

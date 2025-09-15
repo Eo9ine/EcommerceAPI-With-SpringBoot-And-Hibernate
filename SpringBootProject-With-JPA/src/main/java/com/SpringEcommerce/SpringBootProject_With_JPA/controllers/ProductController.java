@@ -1,5 +1,7 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.controllers;
 
+import com.SpringEcommerce.SpringBootProject_With_JPA.config.AppConfiguration;
+import com.SpringEcommerce.SpringBootProject_With_JPA.config.AppConstant;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductDTO;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.services.ProductServiceImp;
@@ -30,10 +32,10 @@ public class ProductController {
 
     @GetMapping("/public/products")
     public ResponseEntity<ProductResponse> getAllProducts(
-            @RequestParam Integer pageNumber,
-            @RequestParam Integer pageSize,
-            @RequestParam String sortBy,
-            @RequestParam String sortOrder
+            @RequestParam(name = "pageNumber", defaultValue = AppConstant.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstant.PAGE_SIZE,required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstant.SORT_PRODUCT_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOder", defaultValue = AppConstant.SORT_DIRECTION, required = false) String sortOrder
     )
     {
         ProductResponse products = productServiceImp.getAllProducts(pageNumber,pageSize,sortBy,sortOrder);
@@ -48,15 +50,23 @@ public class ProductController {
     }
 
 
+
+
     @GetMapping("/public/categories/{categoryId}/products")
-    public ResponseEntity<ProductResponse> getProductByCategory(@PathVariable Long categoryId)
+    public ResponseEntity<ProductResponse> getProductByCategory(
+            @PathVariable Long categoryId,
+            @RequestParam(name = "pageNumber", defaultValue = AppConstant.PAGE_NUMBER,required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstant.PAGE_SIZE, required = false) Integer pageSize
+    )
     {
-        ProductResponse productResponse = productServiceImp.getProductByCategory(categoryId);
+        ProductResponse productResponse = productServiceImp.getProductByCategory(categoryId, pageNumber, pageSize);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
+
     @GetMapping("/public/products/keyword/{keyword}")
-    public ResponseEntity<ProductResponse> getProductByKeyword(@PathVariable String keyword)
+    public ResponseEntity<ProductResponse> getProductByKeyword(
+            @PathVariable String keyword)
     {
         ProductResponse productResponse = productServiceImp.getProductByKeyword(keyword);
         return new ResponseEntity<>(productResponse, HttpStatus.FOUND);

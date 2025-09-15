@@ -4,7 +4,6 @@ import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.APIException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.CustomResourceNotFoundException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Product;
-import com.SpringEcommerce.SpringBootProject_With_JPA.payload.APIResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductDTO;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
@@ -72,7 +71,6 @@ public class ProductServiceImp implements ProductServiceInterface{
         List<Product> fetchingProducts = contentPage.getContent();
 
 
-
         if (fetchingProducts.isEmpty())
         {
             throw new APIException("Products not found!");
@@ -84,7 +82,7 @@ public class ProductServiceImp implements ProductServiceInterface{
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
-        productResponse.setPageNumber(contentPage.getTotalPages());
+        productResponse.setPageNumber(contentPage.getNumber());
         productResponse.setPageSize(contentPage.getSize());
         productResponse.setTotalElements(contentPage.getNumberOfElements());
         productResponse.setLastPage(contentPage.isLast());
@@ -104,12 +102,15 @@ public class ProductServiceImp implements ProductServiceInterface{
     }
 
     @Override
-    public ProductResponse getProductByCategory(Long categoryId) {
+    public ProductResponse getProductByCategory(Long categoryId, Integer pageNumber, Integer pageSize) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomResourceNotFoundException("Category", "categoryId", categoryId));
 
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Product> pageDetails = productDBRepository.findByCategoryOrderByPriceAsc(category,pageable);
 
-        List<Product> products = productDBRepository.findByCategoryOrderByPriceAsc(category);
+
+        List<Product> products = pageDetails.getContent();
 
         if( products.isEmpty())
             throw new APIException("Product not found!");
@@ -120,9 +121,14 @@ public class ProductServiceImp implements ProductServiceInterface{
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
+        productResponse.setLastPage(pageDetails.isLast());
+        productResponse.setTotalElements(pageDetails.getNumberOfElements());
+        productResponse.setPageNumber(pageDetails.getNumber());
+        productResponse.setPageSize(pageDetails.getSize());
         return productResponse;
 
     }
+
 
     @Override
     public ProductResponse getProductByKeyword(String keyword) {
