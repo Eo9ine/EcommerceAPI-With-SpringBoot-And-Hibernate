@@ -19,5 +19,6 @@ public class Role {
     private ApplicationRoles userRole;
 
     @ManyToMany(mappedBy = "userRole")
+    @Column(name = "user")
     private User user;
 }
