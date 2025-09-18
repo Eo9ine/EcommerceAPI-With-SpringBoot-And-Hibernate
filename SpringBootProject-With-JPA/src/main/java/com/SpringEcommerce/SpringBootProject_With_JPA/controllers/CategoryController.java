@@ -1,17 +1,13 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.controllers;
 
 import com.SpringEcommerce.SpringBootProject_With_JPA.config.AppConstant;
-import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryDTO;
-import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryResponse;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.PaginationResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.services.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/public")
@@ -22,7 +18,7 @@ public class CategoryController {
 
 
     @GetMapping("/categories")
-    public ResponseEntity<CategoryResponse> getCategories(
+    public ResponseEntity<PaginationResponse> getCategories(
             @RequestParam(name = "pageNumber", defaultValue = AppConstant.PAGE_NUMBER, required = false) Integer pageNumber,
             @RequestParam(name = "pageSize", defaultValue = AppConstant.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(name = "sortBy", defaultValue = AppConstant.SORT_CATEGORY_BY, required = false) String sortBy,

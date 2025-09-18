@@ -4,7 +4,7 @@ import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.APIException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.CustomResourceNotFoundException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryDTO;
-import com.SpringEcommerce.SpringBootProject_With_JPA.payload.CategoryResponse;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.PaginationResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
@@ -13,9 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +33,7 @@ public class CategoryService implements CartegoryServiceInterface{
     }
 
     @Override
-    public CategoryResponse getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder)
+    public PaginationResponse<CategoryDTO> getCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder)
     {
         Sort sortingByAndOrder = sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
@@ -52,7 +50,7 @@ public class CategoryService implements CartegoryServiceInterface{
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .toList();
 
-        CategoryResponse categoryResponse = new CategoryResponse();
+        PaginationResponse<CategoryDTO> categoryResponse = new PaginationResponse<>();
         categoryResponse.setContent(categoryDTOS);
         categoryResponse.setPageNumber(contentPage.getNumber());
         categoryResponse.setPageSize(contentPage.getSize());

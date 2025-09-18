@@ -4,8 +4,9 @@ import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.APIException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.exceptions.CustomResourceNotFoundException;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Category;
 import com.SpringEcommerce.SpringBootProject_With_JPA.model.Product;
+import com.SpringEcommerce.SpringBootProject_With_JPA.payload.PaginationResponse;
 import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductDTO;
-import com.SpringEcommerce.SpringBootProject_With_JPA.payload.ProductResponse;
+
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.DBRepository;
 import com.SpringEcommerce.SpringBootProject_With_JPA.repository.ProductDBRepository;
 import org.modelmapper.ModelMapper;
@@ -59,7 +60,7 @@ public class ProductServiceImp implements ProductServiceInterface{
     }
 
     @Override
-    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public PaginationResponse<ProductDTO> getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
         Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
@@ -80,7 +81,7 @@ public class ProductServiceImp implements ProductServiceInterface{
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
-        ProductResponse productResponse = new ProductResponse();
+        PaginationResponse<ProductDTO> productResponse = new PaginationResponse<>();
         productResponse.setContent(productDTOS);
         productResponse.setPageNumber(contentPage.getNumber());
         productResponse.setPageSize(contentPage.getSize());
@@ -102,7 +103,7 @@ public class ProductServiceImp implements ProductServiceInterface{
     }
 
     @Override
-    public ProductResponse getProductByCategory(Long categoryId, Integer pageNumber, Integer pageSize) {
+    public PaginationResponse<ProductDTO> getProductByCategory(Long categoryId, Integer pageNumber, Integer pageSize) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CustomResourceNotFoundException("Category", "categoryId", categoryId));
 
@@ -119,7 +120,7 @@ public class ProductServiceImp implements ProductServiceInterface{
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
-        ProductResponse productResponse = new ProductResponse();
+        PaginationResponse<ProductDTO> productResponse = new PaginationResponse<>();
         productResponse.setContent(productDTOS);
         productResponse.setLastPage(pageDetails.isLast());
         productResponse.setTotalElements(pageDetails.getNumberOfElements());
@@ -131,7 +132,7 @@ public class ProductServiceImp implements ProductServiceInterface{
 
 
     @Override
-    public ProductResponse getProductByKeyword(String keyword) {
+    public PaginationResponse<ProductDTO> getProductByKeyword(String keyword) {
         List<Product> products = productDBRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%");
 
         if(products.isEmpty())
@@ -142,7 +143,7 @@ public class ProductServiceImp implements ProductServiceInterface{
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
 
-        ProductResponse productResponse = new ProductResponse();
+        PaginationResponse<ProductDTO> productResponse = new PaginationResponse<>();
         productResponse.setContent(productDTOS);
 
         return productResponse;
@@ -193,6 +194,7 @@ public class ProductServiceImp implements ProductServiceInterface{
     private String uploadImage(String path, MultipartFile image) throws IOException {
         String fileImageName = image.getOriginalFilename();
         String randomImageFileName = UUID.randomUUID().toString();
+        assert fileImageName != null;
         String newFileImageName = randomImageFileName.concat(fileImageName.substring(fileImageName.lastIndexOf('.')));
 
 
