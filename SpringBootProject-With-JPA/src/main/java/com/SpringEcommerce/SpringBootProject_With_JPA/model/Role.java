@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -20,5 +23,5 @@ public class Role {
 
     @ManyToMany(mappedBy = "userRole")
     @Column(name = "user")
-    private User user;
+    private List<User> user = new ArrayList<>();
 }

@@ -35,9 +35,9 @@ public class Product {
         this.category = category;
     }
 
-    public Product(Long productId, String productName, String description
+    public Product(String productName, String description
                    , String image, Integer quantity, double price, double discount, double specialPrice) {
-        this.productId = productId;
+
         this.productName = productName;
         this.description = description;
         this.image = image;

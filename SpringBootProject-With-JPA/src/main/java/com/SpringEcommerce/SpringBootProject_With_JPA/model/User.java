@@ -13,7 +13,10 @@ import java.util.Set;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "user_email")
+        })
 public class User {
 
     @Id
@@ -41,6 +44,19 @@ public class User {
             CascadeType.DETACH,
             CascadeType.MERGE},
             fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_role")
+    @JoinColumn(name = "user_id")
     private Set<Role> userRoles = new HashSet<>();
+
+    @OneToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
+    })
+    @JoinColumn(name = "user_address")
+    private Address address;
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }
