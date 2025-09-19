@@ -1,6 +1,8 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,9 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EntityListeners(EntityListeners.class)
 public class Role {
 
     @Id
@@ -21,7 +26,7 @@ public class Role {
     @Column(name = "user_role", length = 15)
     private ApplicationRoles userRole;
 
-    @ManyToMany(mappedBy = "userRole")
+    @ManyToMany(mappedBy = "userRoles")
     @Column(name = "user")
     private List<User> user = new ArrayList<>();
 }
