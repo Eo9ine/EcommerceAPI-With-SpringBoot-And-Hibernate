@@ -1,11 +1,9 @@
 package com.SpringEcommerce.SpringBootProject_With_JPA.security.jjwt;
 
 import com.SpringEcommerce.SpringBootProject_With_JPA.security.CustomUserDetailsImp;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +56,7 @@ public class JwtUtil {
         claims.put("Issuer", jwtIssuer);
 
         customClaims.putAll(claims);
-
+        logger.debug("Claims: {}", claims);
         return buildToken(customClaims, userDetailsImp.getUsername());
     }
 
@@ -82,6 +80,42 @@ public class JwtUtil {
                 .collect(Collectors.toList());
     }
 
+
+    public boolean isTokenValid(String token)
+    {
+        try
+        {
+            Jwts.parser()
+                    .setSigningKey(signatureKey())
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        }
+        catch(SignatureException ex)
+        {
+            logger.error("Invalid Jwt signature: {}", ex.getMessage());
+        }
+        catch(MalformedJwtException ex)
+        {
+            logger.error("Invalid Jwt token: {}", ex.getMessage());
+
+        }
+        catch(ExpiredJwtException ex)
+        {
+            logger.error("Jwt token is expired: {}", ex.getMessage());
+        }
+        catch(UnsupportedJwtException ex)
+        {
+            logger.error("Jwt is unsupported: {}", ex.getMessage());
+        }
+        catch(IllegalArgumentException ex)
+        {
+            logger.error("Jwt claims string is empty: {}", ex.getMessage());
+
+        }
+
+        return false;
+    }
 
 
 
