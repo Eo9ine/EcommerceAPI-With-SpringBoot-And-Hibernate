@@ -27,6 +27,16 @@ public class CustomUserDetailsImp implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+    public Long getUserId()
+    {
+        return this.user.getUserId();
+    }
+
+    public String getEmail()
+    {
+        return this.user.getEmail();
+    }
+
     @Override
     public String getPassword() {
         return this.user.getPassword();
