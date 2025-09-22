@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class JwtUtil {
@@ -117,6 +118,35 @@ public class JwtUtil {
         return false;
     }
 
+    public boolean isTokenExpired(String token)
+    {
+        return extractExpiration(token).before(new Date());
+    }
+
+    //Extracting claims
+
+    public <T> T extractClaims(String token, Function<Claims , T> claimResolver)
+    {
+        final Claims claims = extractAllClaims(token);
+        return claimResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(signatureKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public Date extractExpiration(String token)
+    {
+        return extractClaims(token, Claims::getExpiration );
+    }
+
+
+
+    //Refreshing
 
 
 }
