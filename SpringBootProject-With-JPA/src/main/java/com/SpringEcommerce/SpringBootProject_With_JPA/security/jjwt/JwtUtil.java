@@ -124,7 +124,6 @@ public class JwtUtil {
     }
 
     //Extracting claims
-
     public <T> T extractClaims(String token, Function<Claims , T> claimResolver)
     {
         final Claims claims = extractAllClaims(token);
@@ -144,9 +143,33 @@ public class JwtUtil {
         return extractClaims(token, Claims::getExpiration );
     }
 
-
-
     //Refreshing
+    public String refreshToken(String token)
+    {
+        Claims oldClaims = extractAllClaims(token);
 
+        return Jwts.builder()
+                .claims(oldClaims)
+                .issuedAt(new Date())
+                .expiration(Date.from(Instant.now().plusMillis(expirationTime)))
+                .signWith(signatureKey(), SignatureAlgorithm.HS384)
+                .compact();
+    }
+
+    //helper method
+    public String getTokenFromRequest(HttpServletRequest request)
+    {
+        final String BEARER_TOKEN = "bearer ";
+        String jwt = request.getHeader("Authentication");
+        logger.debug("Jwt token: {}", jwt);
+
+        if(jwt != null && jwt.startsWith(BEARER_TOKEN))
+        {
+            return jwt.substring(7);
+        }
+
+        logger.debug("token is not found!");
+        return null;
+    }
 
 }
