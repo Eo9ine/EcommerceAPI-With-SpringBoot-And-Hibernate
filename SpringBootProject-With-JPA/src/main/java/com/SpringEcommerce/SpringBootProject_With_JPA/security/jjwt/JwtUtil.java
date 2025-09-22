@@ -172,4 +172,9 @@ public class JwtUtil {
         return null;
     }
 
+    public String extractUserName(String token)
+    {
+        return extractClaims(token , Claims::getSubject);
+    }
+
 }
